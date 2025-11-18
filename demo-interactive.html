@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Demo - Interactive</title>
+    <style>
+        @font-face {
+            font-family: 'font-rot13';
+            src: url('rot13.ttf') format('truetype');
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 2em;
+            background-color: white;
+            font-size: 18px;
+        }
+        
+        .custom-font {
+            font-family: "font-rot13";
+            color: red;
+        }
+
+        .paragraph{
+            position:relative;
+            display:block;
+            width:100%;
+            margin-bottom:.5rem;
+        }
+
+        .controls {
+            display:none;
+            position:absolute;
+            top:0;
+            right:0;
+            padding:2px 4px;
+            border-radius:0 0 0 4px;
+            font-size:.8rem;
+        }
+
+        .paragraph p{
+            position:relative;
+            box-sizing:border-box;
+            width:100%;
+            padding:.5rem 2rem .5rem .5rem;
+            border:1px solid #ccc;
+            margin:0;
+            transition:box-shadow .2s ease,
+                        border-color .2s ease;
+        }
+
+        .paragraph p:hover {
+            border-color:#fff;
+            box-shadow:0 0 4px 2px rgba(0,0,0,.8),
+                    0 0 8px 4px rgba(0,0,0,.5);
+        }
+
+        .paragraph:hover .controls {
+            display:flex;
+            gap:4px;
+        }
+
+        #add-ui {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: .8rem 2rem;
+            display: flex;
+            gap: .5rem;
+        }
+        #add-ui input[type="text"] { flex: 1; padding: .4rem; }
+    </style>
+</head>
+<body>
+
+<div id="content">
+    <div class="paragraph">
+        <p>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</p>
+        <div class="controls">
+            <button class="btn-del">Delete</button>
+            <button class="btn-toggle-font">Toggle Font</button>
+        </div>
+    </div>
+    <div class="paragraph">
+        <p class="custom-font">Yberz Vcfhz vf fvzcyl qhzzl grkg bs gur cevagvat naq glcrfrggvat vaqhfgel. Yberz Vcfhz unf orra gur vaqhfgel'f fgnaqneq qhzzl grkg rire fvapr gur 1500f, jura na haxabja cevagre gbbx n tnyyrl bs glcr naq fpenzoyrq vg gb znxr n glcr fcrpvzra obbx. Vg unf fheivirq abg bayl svir praghevrf, ohg nyfb gur yrnc vagb ryrpgebavp glcrfrggvat, erznvavat rffragvnyyl hapunatrq. Vg jnf cbchynevfrq va gur 1960f jvgu gur eryrnfr bs Yrgenfrg furrgf pbagnvavat Yberz Vcfhz cnffntrf, naq zber erpragyl jvgu qrfxgbc choyvfuvat fbsgjner yvxr Nyqhf CntrZnxre vapyhqvat irefvbaf bs Yberz Vcfhz.</p>
+        <div class="controls">
+            <button class="btn-del">Delete</button>
+            <button class="btn-toggle-font">Toggle Font</button>
+        </div>
+    </div>
+
+    <div class="paragraph">
+        <p class="custom-font">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+        <div class="controls">
+            <button class="btn-del">Delete</button>
+            <button class="btn-toggle-font">Toggle Font</button>
+        </div>
+    </div>
+</div>
+
+<div id="add-ui">
+    <input type="text" id="new-text" placeholder="Type a message">
+    <button id="btn-add">Add Paragraph</button>
+</div>
+
+<script>
+    function createParagraphBlock(text) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'paragraph';
+
+        const p = document.createElement('p');
+        p.textContent = text;
+
+        const controls = document.createElement('div');
+        controls.className = 'controls';
+
+        const delBtn = document.createElement('button');
+        delBtn.className = 'btn-del';
+        delBtn.textContent = 'Delete';
+
+        const toggleBtn = document.createElement('button');
+        toggleBtn.className = 'btn-toggle-font';
+        toggleBtn.textContent = 'Toggle Font';
+
+        controls.append(delBtn, toggleBtn);
+        wrapper.append(p, controls);
+        return wrapper;
+    }
+
+    document.getElementById('btn-add').addEventListener('click', () => {
+        const input = document.getElementById('new-text');
+        const text = input.value.trim();
+        if (!text) return;
+        const pBlock = createParagraphBlock(text);
+        document.getElementById('content').appendChild(pBlock);
+        attachHandlers(pBlock);
+        input.value = '';
+    });
+
+    document.getElementById('new-text').addEventListener('keypress', e => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            document.getElementById('btn-add').click();
+        }
+    });
+
+    function attachHandlers(root = document) {
+        root.querySelectorAll('.btn-del').forEach(btn => {
+            btn.onclick = e => {
+                const p = e.target.closest('.paragraph');
+                p.remove();
+            };
+        });
+
+        root.querySelectorAll('.btn-toggle-font').forEach(btn => {
+            btn.onclick = e => {
+                const p = e.target.closest('.paragraph').querySelector('p');
+                p.classList.toggle('custom-font');
+            };
+        });
+    }
+
+    attachHandlers();
+</script>
+</body>
+</html>
