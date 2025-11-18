@@ -1,4 +1,4 @@
-# README
+# Glyph Substitution
 
 This is an attempt at a proof-of-concept of the Glyph Substitution
 obfuscation method discussed in a Huntress [blog post](https://www.huntress.com/blog/gootloader-threat-detection-woff2-obfuscation) 
